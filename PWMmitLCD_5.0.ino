@@ -26,31 +26,23 @@ void setup()
     // Initialize components
     init_motor_PWM();
 
-    analogWrite(3, 255);
-
 	Serial.begin(9600);
 }
 
 void loop() 
 {
 	// Read Poti from pedal
-	const unsigned int pot = analogRead(A0);
+	const unsigned int pot = analogRead(A5);
 
 	// Monitor poti values
 	Serial.print("OCR1B: "), Serial.print(pot), Serial.print('\n');
 
-    // Handlers
-    handle_motor_PWM_control(pot);
+    Serial.print("Val0: "), Serial.print(mux[0].read(0)), Serial.print('\n');
+    Serial.print("Val1: "), Serial.print(mux[1].read(0)), Serial.print('\n');
+    Serial.print("Func: "), Serial.print(part_val(17)), Serial.print('\n');
 
-/*
-	// Poll all sensors for temperatur
-	for (auto i = 0u, end = sizeof(LUEFTER) / sizeof(LUEFTER[0]); i < end; ++i)
-	{
-		const auto temp_range = part_val(LUEFTER[i]); // Between 0 and 1023
-		const auto voltage_range = map(temp_range, 0, 1023, 0, 255);
-		fan_val(i, voltage_range); // Between 0 and 255
-	}
-*/
+    // Handlers
+    handle_fan_control();
 	
 	delay(100);
 }
