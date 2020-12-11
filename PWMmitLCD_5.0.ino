@@ -16,6 +16,13 @@ static constexpr int GAS = A5;
 
 bool disable = false;
 
+template<typename ...T>
+void debug_message(T&&... paras)
+{
+    (Serial.print(paras), ...);
+    Serial.print('\n');
+}
+
 #include "FanControl.h"
 #include "PWM.h"
 
@@ -32,6 +39,9 @@ void loop()
 {
 	// Read Poti from pedal
 	const unsigned int pot = analogRead(A5);
+
+    // Monitor poti values
+	// debug_message("Pot value: ", pot);
 
     // Handlers
     handle_fan_control();

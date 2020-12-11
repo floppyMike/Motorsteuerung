@@ -82,11 +82,15 @@ void handle_fan_control()
 
 			const auto temp_range = part_val(i->temp_pin); // Between 0 and 1023
 
+			debug_message("Temperatur: ", temp_range);
+
 			const bool prev_half = i->prev_half;
 			const bool flag = temp_range < i->temp_half;
 
 			if (prev_half == flag)
 				continue;
+
+			debug_message("Fan ", i - LUEFTER, (flag ? " lowered power." : " highered power."));
 
 			i->prev_half = !i->prev_half;
 			fan_val(i->fan_pin, flag ? HALF_RUN : FULL_RUN);
