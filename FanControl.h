@@ -24,11 +24,12 @@ struct Fan
 		, temp_half(th)
 	{}
 
-	int fan_pin;				// Fan pin connection
-	int temp_pin;				// Pin to temperatur sensor (on Multiplexer)
-	int temp_half;				// Point at which fan should go full speed (between 0 and 1023)
+	int fan_pin;					// Fan pin connection
+	int temp_pin;					// Pin to temperatur sensor (on Multiplexer)
+	int temp_half;					// Point at which fan should go full speed (between 0 and 1023)
 
-	unsigned long timeout = 0;	// Timepoint in milliseconds till fan can be switched again
+	unsigned long timeout = 0;		// Timepoint in milliseconds till fan can be switched again
+	bit           prev_half = 0;	// Previous step it was on
 };
 
 // Discribes the fan type of the LUEFTER array
@@ -69,16 +70,21 @@ void handle_fan_control()
 {
 	//for (FanType i = 0; i < FanType::NOTHING; ++i)
 	for (auto i = LUEFTER, end = LUEFTER + sizeof(LUEFTER) / sizeof(LUEFTER[0]); i < end; ++i)
-	{
 		if (i->timeout <= millis())
 		{
+			constexpr int HALF_RUN = map(9, 0, 12, 0, 255), FULL_RUN = 255;
+
 			const auto temp_range = part_val(i->temp_pin); // Between 0 and 1023
 
-			constexpr int HALF_RUN = map(9, 0, 12, 0, 255), FULL_RUN = 255;
-			fan_val(i->fan_pin, temp_range < i->temp_half ? HALF_RUN : FULL_RUN); // Between 0 and 255
+			const bit prev_half = i->prev_half;
+			const bit flag = temp_range < i->temp_half;
 
-			i->timeout = millis() + 5000;	// IMPORTANT: This method applies uniformly to all parts but 
-											// 
+			if (prev_half == flag)
+				continue;
+
+			i->prev_half = !i->prev_half;
+			fan_val(i->fan_pin, flag ? HALF_RUN : FULL_RUN);
+
+			i->timeout = millis() + 5000;
 		}
-	}
 }
