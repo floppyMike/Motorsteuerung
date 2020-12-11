@@ -40,7 +40,7 @@ enum FanType
 
 // Tiefsetzer, Motor, Vorverstärker, BMS, Hochsetzer, Motor Treiber; index is multiplexer input port
 static inline Fan LUEFTER[] = { 
-	{ 3, 0, temp_to_value(60) }, 
+	{ 3, 0, 420 }, 
 	{ 5, 1, temp_to_value(60) }, 
 	{ 6, 2, temp_to_value(60) },
 	{ 9, 3, temp_to_value(60) },
@@ -64,6 +64,12 @@ int part_val(int pin)
 int fan_val(int pin, int val)
 {
 	analogWrite(pin, val);
+}
+
+void init_fan_control()
+{
+	for (auto i = LUEFTER, end = LUEFTER + sizeof(LUEFTER) / sizeof(LUEFTER[0]); i < end; ++i)
+		pinMode(i->fan_pin, OUTPUT);
 }
 
 void handle_fan_control()

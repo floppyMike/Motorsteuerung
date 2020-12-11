@@ -23,6 +23,7 @@ void setup()
 {
     // Initialize components
     init_motor_PWM();
+    init_fan_control();
 
 	Serial.begin(9600);
 }
