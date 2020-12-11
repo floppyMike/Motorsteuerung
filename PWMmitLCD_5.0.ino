@@ -37,8 +37,8 @@ void loop()
 	// Monitor poti values
 	Serial.print("OCR1B: "), Serial.print(pot), Serial.print('\n');
 
-    Serial.print("Val0: "), Serial.print(mux[0].read(0)), Serial.print('\n');
-    Serial.print("Val1: "), Serial.print(mux[1].read(0)), Serial.print('\n');
+    Serial.print("Val0: "), Serial.print(part_val(0)), Serial.print('\n');
+    Serial.print("Val1: "), Serial.print(part_val(30)), Serial.print('\n');
     Serial.print("Func: "), Serial.print(part_val(17)), Serial.print('\n');
 
     // Handlers
