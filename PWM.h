@@ -15,6 +15,16 @@ using UnoPWM = CustomPWM<char>; // Arduino Uno PWM set
 
 static inline MicroPWM MOTOR_PWM = { &TCCR1A, &TCCR1B, &OCR1A, &OCR1B }; // Pins 10, 9
 
+/*
+auto analogget(int pin)
+{
+    switch (pin)
+    {
+        case 
+    };
+}
+*/
+
 void init_motor_PWM()
 {
 	pinMode(PWM, OUTPUT);

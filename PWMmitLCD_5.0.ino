@@ -21,8 +21,6 @@ bool disable = false;
 
 void setup() 
 {
-    pinMode(3, OUTPUT);
-
     // Initialize components
     init_motor_PWM();
 
@@ -34,15 +32,9 @@ void loop()
 	// Read Poti from pedal
 	const unsigned int pot = analogRead(A5);
 
-	// Monitor poti values
-	Serial.print("OCR1B: "), Serial.print(pot), Serial.print('\n');
-
-    Serial.print("Val0: "), Serial.print(part_val(0)), Serial.print('\n');
-    Serial.print("Val1: "), Serial.print(part_val(30)), Serial.print('\n');
-    Serial.print("Func: "), Serial.print(part_val(17)), Serial.print('\n');
-
     // Handlers
     handle_fan_control();
+    handle_motor_PWM_control(pot);
 	
 	delay(100);
 }
