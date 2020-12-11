@@ -29,7 +29,7 @@ struct Fan
 	int temp_half;					// Point at which fan should go full speed (between 0 and 1023)
 
 	unsigned long timeout = 0;		// Timepoint in milliseconds till fan can be switched again
-	bit           prev_half = 0;	// Previous step it was on
+	bool          prev_half = 0;	// Previous step it was on
 };
 
 // Discribes the fan type of the LUEFTER array
@@ -76,8 +76,8 @@ void handle_fan_control()
 
 			const auto temp_range = part_val(i->temp_pin); // Between 0 and 1023
 
-			const bit prev_half = i->prev_half;
-			const bit flag = temp_range < i->temp_half;
+			const bool prev_half = i->prev_half;
+			const bool flag = temp_range < i->temp_half;
 
 			if (prev_half == flag)
 				continue;
