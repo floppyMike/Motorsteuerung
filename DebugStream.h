@@ -4,7 +4,7 @@ public:
 	SerialStream() {}
 
 	template<typename T>
-	auto operator<<(const T &v) -> SerialStream &
+	auto operator<<(const T &v) const -> const SerialStream &
 	{
 		Serial.print(v);
 		return *this;
