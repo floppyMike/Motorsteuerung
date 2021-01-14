@@ -1,0 +1,26 @@
+digraph G {
+    compound = true;
+
+    subgraph cluster_setup {
+        label = "Setup";
+        "Pins Setup"; "PWM Setup"; "Lüfter Setup";
+    }
+
+    subgraph cluster_loop {
+        label = "Loop";
+        Gas; PWM; Lüfter;
+    }
+
+    "Pins Setup" -> "PWM Setup" -> "Lüfter Setup" [style=dashed];
+    Layout -> "Pins Setup" [label = "Pins"];
+    Layout -> "Lüfter Setup" [label = "Lüfter Pins"];
+    Defines -> "Lüfter Setup" [label = "Start Lüfter Wert"];
+
+    "Lüfter Setup" -> Gas [style = dashed, lhead = cluster_loop, ltail = cluster_setup] [rhead = cluster_setup];
+
+    Gas -> PWM -> Lüfter [style = dashed];
+    Gas -> PWM [label = "Gas Wert"];
+    Layout -> Gas [label = "Gas Poti Pin"];
+    Layout -> Lüfter [label = "Lüfter Pins"];
+    Defines -> Lüfter [label = "Lüfter Werte"];
+}
