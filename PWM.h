@@ -4,6 +4,9 @@
 
 #if defined MEGA // ------------------------------------------------
 
+/**
+ * @brief Initialize motor PWM timer
+ */
 void init_motor_PWM()
 {
 	//*m_TCCRA = _BV(COM2A0) | _BV(COM2B1) | _BV(WGM21)
@@ -17,8 +20,16 @@ void init_motor_PWM()
 	OCR1B  = 100;									 // (val + 1) / 256 = %
 }
 
+/**
+ * @brief Change the motor PWM duty cycle
+ * @param v 
+ */
 void set_PWM(unsigned short v) { OCR1B = v; }
 
+/**
+ * @brief Switch the PWM timer on or off
+ * @param on State of the timer
+ */
 void turn_PWM(bool on)
 {
 	// Disable PWM at 0

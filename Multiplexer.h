@@ -8,6 +8,9 @@ struct Bit4
 class Multiplexer
 {
 public:
+	static constexpr unsigned int ADDRESS_PINS = 4;
+	static constexpr unsigned int INPUTS	   = (1 << ADDRESS_PINS) - 1;
+
 	Multiplexer(int z, int s0, int s1, int s2, int s3, int en)
 		: m_z(z)
 		, m_s{ s0, s1, s2, s3 }
@@ -22,7 +25,9 @@ public:
 	 */
 	auto address(Bit4 a) const -> const Multiplexer &
 	{
-		for (char i = 0; i < sizeof(m_s) / sizeof(m_s[0]); ++i) digitalWrite(m_s[i], a.v & (1 << i) ? HIGH : LOW);
+		for (char i = 0, e = sizeof(m_s) / sizeof(m_s[0]); i < e; ++i)
+			digitalWrite(m_s[i], a.v & (1 << i) ? HIGH : LOW);
+
 		return *this;
 	}
 

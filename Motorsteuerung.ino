@@ -2,13 +2,13 @@
 #include "Layout.h"
 #include "PWM.h"
 #include "Multiplexer.h"
-
-static Multiplexer mux(pin::MUX_SIG2, pin::MUX_S0, pin::MUX_S1, pin::MUX_S2, pin::MUX_S3, pin::MUX_EN);
+#include "FanControl.h"
 
 void setup()
 {
 	init_pins();
 	init_motor_PWM();
+	init_fan_control();
 
 	Serial.begin(9600);
 }
@@ -16,10 +16,12 @@ void setup()
 void loop()
 {
 	// Read Poti from pedal
-	const unsigned int pot = analogRead(pin::GAS);
-	const unsigned int val = mux.address({ 15 }).read();
-	SerialStream() << "Potval: " << pot << " Muxval: " << val;
+	const unsigned int pot	= analogRead(pin::GAS);
+
+	SerialStream() << "Potval: " << pot;
 
 	handle_motor_PWM_control(pot);
+	handle_fan_control();
+
 	delay(1000);
 }
