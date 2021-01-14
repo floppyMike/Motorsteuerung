@@ -2,24 +2,33 @@ digraph G
 {
     splines=curved;
     node [shape = record];
+    compound = true;
 
-    subgraph cluster_setup 
+    Defines;
+    Layout;
+
+    subgraph cluster_programm 
     {
-        label = "Setup";
-        rankdir = LR;
-        rank = same;
+        label = "Programm"
+
+        subgraph cluster_setup 
         {
-            "Pins init"; "PWM init"; "Lüfter init";
+            label = "Setup";
+            rankdir = LR;
+            rank = same;
+            {
+                "Pins init"; "PWM init"; "Lüfter init";
+            }
         }
-    }
 
-    subgraph cluster_loop
-    {
-        label = "Loop";
-        rankdir = LR;
-        rank = same;
+        subgraph cluster_loop
         {
-            "Gas auslesen"; "PWM stellen"; "Temperatur auslesen"; "Lüfter stellen";
+            label = "Loop";
+            rankdir = LR;
+            rank = same;
+            {
+                "Gas auslesen"; "PWM stellen"; "Temperatur auslesen"; "Lüfter stellen";
+            }
         }
     }
 
@@ -27,4 +36,6 @@ digraph G
     "Gas auslesen" -> "PWM stellen" -> "Temperatur auslesen" -> "Lüfter stellen";
 
     "Pins init" -> "Gas auslesen" [style = invis];
+    Defines -> "Lüfter init" [style = invis];
+    Layout -> "Lüfter init" [style = invis];
 }
