@@ -61,7 +61,7 @@ void handle_fan_control()
 			const auto temperature = temp_val(i);
 			SerialStream() << i << " temp val: " << temperature;
 
-			const auto temp		= temperature > LUEFTER_HALF_POINT[i];
+			const auto temp		= temperature > FAN_HALF_POINT[i];
 			const auto fanstate = state->was_in == FanState::FULL;
 
 			if (fanstate != temp)

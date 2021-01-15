@@ -37,12 +37,12 @@ enum FanState : unsigned char
 /**
  * @brief Describes the border where the fans start going fuĺl power
  */
-static constexpr int LUEFTER_HALF_POINT[ALL_FANS] = { 147, 147, 147, 147, 147, 147 };
+static constexpr int FAN_HALF_POINT[ALL_FANS] = { 147, 147, 147, 147, 147, 147 };
 
 /**
  * @brief Describes the point where things start getting critical (does nothing now). ~> Poweroff? Limit engine?
  */
-static constexpr int LUEFTER_LIMIT[ALL_FANS] = { 200, 200, 200, 200, 200, 200 };
+static constexpr int FAN_LIMIT[ALL_FANS] = { 200, 200, 200, 200, 200, 200 };
 
 /**
  * @brief Power of HALF and FULL fan states
