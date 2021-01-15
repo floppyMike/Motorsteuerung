@@ -35,7 +35,7 @@ Mit den analogen Wert vom Gas wird der Tastgrad vom PWM bestimmt.
 Die Temperaturen der einzelnen Temperatursensoren werden über einen Multiplexer ausgelesen. Das Programm geht durch alle Pins der registrierten Sensoren und liest den Analogwert.
 
 #### Lüfter
-Die Lüfter werden relativ zum Temperaturwert gesteuert. Wenn der Temperaturwert über `Halbe Temperatur` liegt, wird der Lüfter auf maximale Leistung eingestellt. Das Gegenteil geschieht, wenn der Temperaturwert unter `Halbe Temperatur` liegt. Nach der Zwischeneinstellung wartet das Programm durch die 'Schaltpause' auf den jeweiligen Lüfter.
+Die Lüfter werden relativ zum Temperaturwert gesteuert. Wenn der Temperaturwert über `Halb Temperatur` liegt, wird der Lüfter auf maximale Leistung eingestellt. Das Gegenteil geschieht, wenn der Temperaturwert unter `Halb Temperatur` liegt. Nach der Zwischeneinstellung wartet das Programm durch die `Umschalt Pause` auf den jeweiligen Lüfter.
 
 ### Übersicht
 Unten werden alle oben genannte Sachen unter Visuell dargestellt.
