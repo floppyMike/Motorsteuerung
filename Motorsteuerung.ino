@@ -4,6 +4,7 @@
 #include "Multiplexer.h"
 #include "FanControl.h"
 #include "Checks.h"
+#include "Motor.h"
 
 static enum State { RUNNING, COOLING } g_prog_state;
 
@@ -29,15 +30,14 @@ void loop()
 
 void running()
 {
-	// Read Poti from pedal
-	const unsigned int pot = analogRead(pin::GAS);
-
 	if (check_battery() && check_temperature())
 		kill();
 
+	const auto pot = gas_value();
+
 	SerialStream() << "Potval: " << pot;
 
-	handle_motor_PWM_control(pot);
+	handle_motor(pot);
 	handle_fan_control();
 }
 

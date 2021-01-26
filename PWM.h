@@ -56,11 +56,3 @@ void turn_PWM(bool on)
 
 #endif // ------------------------------------------------
 
-void handle_motor_PWM_control(unsigned short gas_val)
-{
-	// Disable PWM at 0
-	//turn_PWM(gas_val != 0);
-
-	// Set PWM value
-	set_PWM(gas_val);
-}
