@@ -1,7 +1,34 @@
 #pragma once
 
-#include "Defines.h"
-#include "Multiplexer.h"
+#include "Utility.h"
+
+#define MEGA
+//#define UNO //TODO
+//#define MICRO
+
+/**
+ * @brief Describes the fan types
+ */
+enum FanType
+{
+	TIEFSETZER,
+	MOTOR,
+	VORSTAEKER,
+	BMS,
+	HOCHSETZER,
+	TREIBER,
+	ALL_FANS
+};
+
+/**
+ * @brief Describes the fan states
+ */
+enum FanState : unsigned char
+{
+	HALF,
+	FULL,
+	ALL_STATES
+};
 
 // -----------------------------------------------------------------------------
 // Pins
@@ -11,8 +38,9 @@ namespace pin
 {
 #if defined MICRO // ------------------------------------------------
 
-	static constexpr int LUEFTER_TIEFSETZER = 3, LUEFTER_MOTOR = 5, LUEFTER_VORSTAERKER = 6, LUEFTER_BMS = 9,
-						 LUEFTER_HOCHSETZER = 11, LUEFTER_MOTOR_TREIB = 13;
+	static constexpr int LUEFTER[ALL_FANS] = { 3, 5, 6, 9, 11, 13 };
+
+	// Multiplexer row of pins "i" represents pin of fan so no need to define them manually
 
 	static constexpr int PWM = 10;
 
@@ -29,7 +57,15 @@ namespace pin
 
 	static constexpr int LUEFTER[ALL_FANS] = { 2, 3, 4, 5, 6, 7 };
 
-	// Multiplexer row of pins "i" represents pin of fan so no need to define them manually
+	// Multiplexer row of pins "i" represents pin of temperature sensor so no need to define them manually.
+	// The rest MUST be beyond ALL_FANS...
+	static constexpr int BMS_LADESTAND	= ALL_FANS + 0;
+	static constexpr int BMS_GES_STROM	= ALL_FANS + 1;
+	static constexpr int BMS_GES_SPAN	= ALL_FANS + 2;
+	static constexpr int MOTOR_DREHZAHL = ALL_FANS + 3;
+	static constexpr int MOTOR_SPAN		= ALL_FANS + 4;
+	static constexpr int MOTOR_DREHMOM	= ALL_FANS + 5;
+	static constexpr int MOTOR_STROM	= ALL_FANS + 6;
 
 	static constexpr int PWM = 10;
 
@@ -64,9 +100,3 @@ void init_pins() noexcept
 	pinMode(pin::NOT_AUS, OUTPUT);
 }
 
-// -----------------------------------------------------------------------------
-// Multiplexers
-// -----------------------------------------------------------------------------
-
-static Multiplexer mux1(pin::MUX_SIG1, pin::MUX_S0, pin::MUX_S1, pin::MUX_S2, pin::MUX_S3, pin::MUX_EN);
-static Multiplexer mux2(pin::MUX_SIG2, pin::MUX_S0, pin::MUX_S1, pin::MUX_S2, pin::MUX_S3, pin::MUX_EN);
