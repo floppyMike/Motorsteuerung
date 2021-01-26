@@ -10,6 +10,15 @@
 //  ~> Die Toleranz ist der Puffer die der Lüfter an sein muss oder aus sein muss bei der anfänglichen Grenze
 
 /**
+ * @brief Read the temperatures
+ * @param buf array buffer for temperatures
+ */
+void temperatures(unsigned int (&buf)[ALL_FANS])
+{
+	for (auto i = 0u; i < ALL_FANS; ++i) buf[i] = mux_val(i);
+}
+
+/**
  * @brief Set the fan object
  *
  * @param pin pin of fan
@@ -37,7 +46,7 @@ struct FanControl
 /**
  * @brief Handle fan speed using temperature sensors
  */
-void handle_fan_control()
+void handle_fan_control(unsigned int (&buf)[ALL_FANS])
 {
 	static FanControl states[ALL_FANS];
 
@@ -47,17 +56,15 @@ void handle_fan_control()
 
 		if (const auto t = millis(); state->time <= t)
 		{
-			const auto temperature = mux_val(i);
-			SerialStream() << i << " temp val: " << temperature;
-
-			const auto temp		= temperature > FAN_HALF_POINT[i];
+			const auto temp		= buf[i] > FAN_HALF_POINT[i];
 			const auto fanstate = state->was_in == FanState::FULL;
 
 			if (fanstate != temp)
 			{
+				SerialStream() << "New state: " << state->was_in;
+
 				state->time	  = t + SWITCH_LAG;
 				state->was_in = static_cast<FanState>(!state->was_in);
-				SerialStream() << "New state: " << state->was_in;
 				set_fan(pin::LUEFTER[i], FAN_POWER[state->was_in]);
 			}
 		}

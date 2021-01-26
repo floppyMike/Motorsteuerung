@@ -13,11 +13,11 @@ auto check_battery() -> bool { return mux_val(pin::BMS_LADESTAND) <= MIN_CHARGE;
  * @brief Check if temperature sensors output a impossible temperature
  * @return fan type of temperature ~> ALL_FANS means all ok
  */
-auto check_temperature() -> FanType
+auto check_temperature(unsigned int (&buf)[ALL_FANS]) -> FanType
 {
-	for (int temp = 0; temp < ALL_FANS; ++temp)
-		if (mux_val(temp) <= MIN_TEMP)
-			return (FanType)temp;
+	for (auto i = begin(buf), e = end(buf); i != e; ++i)
+		if (*i <= MIN_TEMP)
+			return (FanType)(begin(buf) - i);
 
 	return ALL_FANS;
 }
