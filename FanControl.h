@@ -10,17 +10,6 @@
 //  ~> Die Toleranz ist der Puffer die der Lüfter an sein muss oder aus sein muss bei der anfänglichen Grenze
 
 /**
- * @brief Reads a pin from the multiplexers
- *
- * @param mux_pin pin to read from BOTH multiplexers
- * @return read value
- */
-auto temp_val(int mux_pin) -> int
-{
-	return (mux_pin <= Multiplexer::INPUTS ? &mux1 : &mux2)->address({ mux_pin % (Multiplexer::INPUTS + 1) }).read();
-}
-
-/**
  * @brief Set the fan object
  *
  * @param pin pin of fan
@@ -58,7 +47,7 @@ void handle_fan_control()
 
 		if (const auto t = millis(); state->time <= t)
 		{
-			const auto temperature = temp_val(i);
+			const auto temperature = mux_val(i);
 			SerialStream() << i << " temp val: " << temperature;
 
 			const auto temp		= temperature > FAN_HALF_POINT[i];

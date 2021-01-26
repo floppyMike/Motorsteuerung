@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Layout.h"
+
 struct Bit4
 {
 	unsigned char v : 4;
@@ -60,3 +62,21 @@ private:
 	int	 m_en;
 	bool m_enabled;
 };
+
+// -----------------------------------------------------------------------------
+// Multiplexers
+// -----------------------------------------------------------------------------
+
+static Multiplexer mux1(pin::MUX_SIG1, pin::MUX_S0, pin::MUX_S1, pin::MUX_S2, pin::MUX_S3, pin::MUX_EN);
+static Multiplexer mux2(pin::MUX_SIG2, pin::MUX_S0, pin::MUX_S1, pin::MUX_S2, pin::MUX_S3, pin::MUX_EN);
+
+/**
+ * @brief Reads a pin from the multiplexers
+ *
+ * @param mux_pin pin to read from BOTH multiplexers
+ * @return read value
+ */
+auto mux_val(int mux_pin) -> int
+{
+	return (mux_pin <= Multiplexer::INPUTS ? &mux1 : &mux2)->address({ mux_pin % (Multiplexer::INPUTS + 1) }).read();
+}
