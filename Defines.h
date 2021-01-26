@@ -6,6 +6,13 @@
 // Definitions
 // -----------------------------------------------------------------------------
 
+/**
+ * @brief Names the individual components
+ */
+static constexpr const char *COMP_DESC[ALL_FANS] = {
+	"Tiefsetzer", "Motor", "Vorverstaerker", "BMS", "Hochversetzer", "Motor Treiber"
+}; // TODO: Not all components require a fan
+
 #if defined MEGA // ------------------------------------------------
 
 /**
