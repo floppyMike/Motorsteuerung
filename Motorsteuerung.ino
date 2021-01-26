@@ -3,7 +3,7 @@
 #include "PWM.h"
 #include "Multiplexer.h"
 #include "FanControl.h"
-#include "Checks.h"
+#include "Battery.h"
 #include "Motor.h"
 
 static enum State { RUNNING, COOLING } g_prog_state;
@@ -30,12 +30,13 @@ void loop()
 
 void running()
 {
-	// Read values
-	const auto	 pot = gas_value();
+	const auto c   = charge();
+	const auto pot = gas_value();
+
 	unsigned int temps[ALL_FANS];
 	temperatures(temps);
 
-	if (check_battery() && check_temperature(temps))
+	if (check_battery(c) && check_temperature(temps))
 		kill();
 
 	handle_motor(pot);

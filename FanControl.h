@@ -10,6 +10,19 @@
 //  ~> Die Toleranz ist der Puffer die der Lüfter an sein muss oder aus sein muss bei der anfänglichen Grenze
 
 /**
+ * @brief Check if temperature sensors output a impossible temperature
+ * @return fan type of temperature ~> ALL_FANS means all ok
+ */
+auto check_temperature(unsigned int (&buf)[ALL_FANS]) -> FanType
+{
+	for (auto i = begin(buf), e = end(buf); i != e; ++i)
+		if (*i <= MIN_TEMP)
+			return (FanType)(begin(buf) - i);
+
+	return ALL_FANS;
+}
+
+/**
  * @brief Read the temperatures
  * @param buf array buffer for temperatures
  */
