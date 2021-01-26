@@ -7,7 +7,7 @@
  * @brief Check if enough power is available
  * @return if battery has enough power
  */
-auto check_battery() -> bool { return mux_val(BMS_LADESTAND) <= MIN_CHARGE; }
+auto check_battery() -> bool { return mux_val(pin::BMS_LADESTAND) <= MIN_CHARGE; }
 
 /**
  * @brief Check if temperature sensors output a impossible temperature

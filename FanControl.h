@@ -28,7 +28,7 @@ void init_fan_control()
 /**
  * @brief Temperature change switch pauses
  */
-struct State
+struct FanControl
 {
 	unsigned long time	 = 0;
 	FanState	  was_in = HALF;
@@ -39,7 +39,7 @@ struct State
  */
 void handle_fan_control()
 {
-	static State states[ALL_FANS];
+	static FanControl states[ALL_FANS];
 
 	for (auto i = 0u; i < ALL_FANS; ++i)
 	{

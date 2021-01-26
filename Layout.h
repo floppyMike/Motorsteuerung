@@ -17,7 +17,8 @@ enum FanType
 	BMS,
 	HOCHSETZER,
 	TREIBER,
-	ALL_FANS
+	ALL_FANS,
+    NO_FANS
 };
 
 /**
