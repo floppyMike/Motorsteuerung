@@ -33,3 +33,13 @@ static constexpr int LUEFTER_LIMIT[] = {};
  * @brief Lag between switching fan states in milliseconds
  */
 static constexpr unsigned long SWITCH_LAG = 5000;
+
+/**
+ * @brief Charge of battery
+ */
+static constexpr unsigned int MIN_CHARGE = 0; // TODO: measure and select minium power charge
+
+/**
+ * @brief Temperature border till interpreted as "not available"
+ */
+static constexpr unsigned int MIN_TEMP = 0; // TODO: measure minium temperature allowed till "not available"

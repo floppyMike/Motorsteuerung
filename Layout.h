@@ -74,7 +74,7 @@ namespace pin
 	static constexpr int ZUND	 = 0;
 	static constexpr int NOT_AUS = 1;
 
-	static constexpr int MUX_SIG1 = A0, MUX_SIG2 = A1;
+	static constexpr int MUX_SIG1 = A1, MUX_SIG2 = A0;
 
 	static constexpr int GAS = A2;
 
