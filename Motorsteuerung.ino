@@ -36,8 +36,11 @@ void running()
 	unsigned int temps[ALL_FANS];
 	temperatures(temps);
 
-	if (check_battery(c) && check_temperature(temps))
-		kill();
+	// if (check_battery(c) && check_temperature(temps))
+	// 	kill();
+
+    for (auto i = 0u; i < ALL_FANS; ++i)
+        SerialStream() << COMP_DESC[i] << ": " << temps[i];
 
 	handle_motor(pot);
 	handle_fan_control(temps);

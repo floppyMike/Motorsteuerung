@@ -26,6 +26,7 @@ enum FanType
  */
 enum FanState : unsigned char
 {
+    OFF,
 	HALF,
 	FULL,
 	ALL_STATES

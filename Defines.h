@@ -16,23 +16,17 @@ static constexpr const char *COMP_DESC[ALL_FANS] = {
 #if defined MEGA // ------------------------------------------------
 
 /**
- * @brief Describes the border where the fans start going fuĺl power
+ * @brief Describes the borders where the fans start switching to another power. The last row of values describe the
+ * critical limit
  */
-static constexpr int FAN_HALF_POINT[ALL_FANS] = { 147, 147, 147, 147, 147, 147 };
+static constexpr int FAN_STATES[ALL_STATES][ALL_FANS] = {
+	{ 50, 50, 50, 50, 50, 50 }, { 147, 147, 147, 147, 147, 147 }, { 200, 200, 200, 200, 200, 200 }
+}; // TODO: Measure appropiate values
 
 /**
- * @brief Describes the point where things start getting critical (does nothing now). ~> Poweroff? Limit engine?
+ * @brief Power the fan states
  */
-static constexpr int FAN_LIMIT[ALL_FANS] = { 200, 200, 200, 200, 200, 200 };
-
-/**
- * @brief Power of HALF and FULL fan states
- */
-static constexpr unsigned int FAN_POWER[ALL_STATES] = { 0, 255 };
-
-#elif defined MICRO // ------------------------------------------------
-
-static constexpr int LUEFTER_LIMIT[] = {};
+static constexpr unsigned int FAN_POWER[ALL_STATES] = { 0, 127, 255 };
 
 #endif // ------------------------------------------------
 
