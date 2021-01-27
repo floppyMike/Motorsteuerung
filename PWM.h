@@ -7,7 +7,7 @@
 /**
  * @brief Initialize motor PWM timer
  */
-void init_motor_PWM()
+void init_timer1_PWM()
 {
 	//*m_TCCRA = _BV(COM2A0) | _BV(COM2B1) | _BV(WGM21)
 	//| _BV(WGM20);	  // COM0A0 = Toggle OCR0A; COM0B1 = Use OCR0B; WGM## = Set PWM mode

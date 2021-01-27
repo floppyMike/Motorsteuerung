@@ -11,7 +11,7 @@ static enum State { RUNNING, COOLING } g_prog_state;
 void setup()
 {
 	init_pins();
-	init_motor_PWM();
+	init_motor();
 	init_fans();
 
 	Serial.begin(9600);

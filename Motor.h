@@ -21,6 +21,11 @@ void handle_motor(unsigned short gas_val)
 }
 
 /**
+ * @brief Initialize the motor
+ */
+void init_motor() { init_timer1_PWM(); }
+
+/**
  * @brief Get the state of the gas
  * @return gas power
  */
