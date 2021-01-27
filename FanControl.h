@@ -32,43 +32,50 @@ void temperatures(unsigned int (&buf)[ALL_FANS])
 }
 
 /**
+ * @brief Temperature change switch pauses
+ */
+static struct FanControl
+{
+	unsigned long time	 = 0;
+	unsigned char was_in = OFF;
+} g_fan_states[ALL_FANS];
+
+/**
  * @brief Set the fan object
  *
  * @param pin pin of fan
  * @param val analog fan value
  */
-void set_fan(int pin, int val) { analogWrite(pin, val); }
-
-/**
- * @brief Initialize fans
- */
-void init_fan_control()
+void set_fan(FanType t, FanState s)
 {
-	for (auto i = begin(pin::LUEFTER), e = end(pin::LUEFTER); i != e; ++i) set_fan(*i, FAN_POWER[OFF]);
+	g_fan_states[t].was_in = s;
+	analogWrite(pin::LUEFTER[t], FAN_POWER[s]);
 }
 
 /**
- * @brief Temperature change switch pauses
+ * @brief set all fans to a power
+ * @param s Fan state
  */
-struct FanControl
+void set_fans(FanState s)
 {
-	unsigned long time	 = 0;
-	unsigned char was_in = OFF;
-};
+	for (auto i = begin(pin::LUEFTER), e = end(pin::LUEFTER); i != e; ++i) set_fan((FanType)*i, OFF);
+}
+
+/**
+ * @brief Initialize the fans
+ */
+void init_fans() { set_fans(OFF); }
 
 /**
  * @brief Handle fan speed using temperature sensors
  */
 void handle_fan_control(unsigned int (&buf)[ALL_FANS])
 {
-	static FanControl states[ALL_FANS];
-
 	for (auto f = 0u; f < ALL_FANS; ++f)
 	{
-		auto state = &states[f];
+		auto state = &g_fan_states[f];
 
 		if (const auto t = millis(); state->time <= t)
-		{
 			for (auto s = 0u; s < ALL_STATES; ++s)
 			{
 				const auto temp		= buf[f] <= FAN_STATES[s][f];
@@ -80,13 +87,12 @@ void handle_fan_control(unsigned int (&buf)[ALL_FANS])
 
 					state->time = t + SWITCH_LAG;
 					state->was_in += fanstate ? 1 : -1;
-					set_fan(pin::LUEFTER[f], FAN_POWER[state->was_in]);
+					set_fan((FanType)f, (FanState)state->was_in);
 
 					SerialStream() << "Now: " << state->was_in;
 
 					break;
 				}
 			}
-		}
 	}
 }
