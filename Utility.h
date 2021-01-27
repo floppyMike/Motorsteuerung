@@ -40,3 +40,21 @@ constexpr int map(int val, int input_min, int input_max, int output_min, int out
 {
 	return output_min + (output_max - output_min) / (input_max - input_min) * (val - input_min);
 }
+
+/**
+ * @brief Find a value matching the function in the array
+ *
+ * @param begin array begin
+ * @param end array end
+ * @param func unary comparaison
+ * @return iterator the matching value
+ */
+template<typename Iter, typename F>
+auto find_if(Iter begin, Iter end, F &&func) -> Iter
+{
+	for (; begin != end; ++begin)
+		if (func(*begin))
+			return begin;
+
+	return end;
+}

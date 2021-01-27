@@ -11,13 +11,26 @@
 
 /**
  * @brief Check if temperature sensors output a impossible temperature
- * @return fan type of temperature ~> ALL_FANS means all ok
+ * @return fan type of unreadable temperature ~> ALL_FANS means all ok
  */
 auto check_temperature(unsigned int (&buf)[ALL_FANS]) -> FanType
 {
-	for (auto i = begin(buf), e = end(buf); i != e; ++i)
-		if (*i <= MIN_TEMP)
-			return (FanType)(begin(buf) - i);
+	if (const auto f = find_if(begin(buf), end(buf), [](unsigned int t) { return t <= MIN_TEMP; }); f != end(buf))
+		return (FanType)(begin(buf) - f);
+
+	return ALL_FANS;
+}
+
+/**
+ * @brief Search for a component thats overheating
+ * @return overheating component
+ */
+auto check_overheat(unsigned int (&buf)[ALL_FANS]) -> FanType
+{
+	if (const auto f =
+			find_if(begin(buf), end(buf), [c = FAN_STATES[FULL]](unsigned int t) mutable { return t > *c++; });
+		f != end(buf))
+		return (FanType)(begin(buf) - f);
 
 	return ALL_FANS;
 }
@@ -58,7 +71,7 @@ void set_fan(FanType t, FanState s)
  */
 void set_fans(FanState s)
 {
-	for (auto i = begin(pin::LUEFTER), e = end(pin::LUEFTER); i != e; ++i) set_fan((FanType)*i, OFF);
+	for (auto i = 0u; i < ALL_FANS; ++i) set_fan((FanType)i, s);
 }
 
 /**
@@ -83,7 +96,8 @@ void handle_fan_control(unsigned int (&buf)[ALL_FANS])
 
 				if (temp != fanstate)
 				{
-					SerialStream() << "Was: " << state->was_in << " temp: " << temp << " fan: " << fanstate;
+					SerialStream() << "i: " << f << " was: " << state->was_in << " temp: " << temp
+								   << " fan: " << fanstate;
 
 					state->time = t + SWITCH_LAG;
 					state->was_in += fanstate ? 1 : -1;
