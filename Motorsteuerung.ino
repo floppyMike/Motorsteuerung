@@ -24,28 +24,6 @@ void setup()
 
 void loop()
 {
-	switch (g_prog_state)
-	{
-	case RUNNING: running(); break;
-	case COOLING: cooling(); break;
-	}
-
-	delay(1000);
-}
-
-// -----------------------------------------------------------------------------
-// Running state handlers
-// -----------------------------------------------------------------------------
-
-void start_running()
-{
-	SerialStream() << "Motor enabled.";
-	init_motor();
-	g_prog_state = RUNNING;
-}
-
-void running()
-{
 	// Get inputs
 	const auto c   = charge();
 	const auto pot = gas_value();
@@ -63,19 +41,43 @@ void running()
         return;
     }
 
+    // Do jobs
+	switch (g_prog_state)
+	{
+	case RUNNING: running(temps, pot); break;
+	case COOLING: cooling(temps); break;
+	}
+
+	delay(1000);
+}
+
+// -----------------------------------------------------------------------------
+// Running state handlers
+// -----------------------------------------------------------------------------
+
+void start_running()
+{
+	SerialStream() << "Motor enabled.";
+	init_motor();
+	g_prog_state = RUNNING;
+}
+
+void running(unsigned int (&temps)[ALL_FANS], unsigned int pot)
+{
+    // Additional checks
 	if (check_overheat(temps) != ALL_FANS)
     {
 		cool_down();
         return;
     }
 
-	// Do jobs
+	// Tasks
 	handle_motor(pot);
 	handle_fan_control(temps);
 }
 
 // -----------------------------------------------------------------------------
-// Cooling state banners
+// Cooling state handlers
 // -----------------------------------------------------------------------------
 
 void cool_down()
@@ -88,11 +90,8 @@ void cool_down()
 	g_prog_state = COOLING;
 }
 
-void cooling()
+void cooling(unsigned int (&temps)[ALL_FANS])
 {
-	unsigned int temps[ALL_FANS];
-	temperatures(temps);
-
 	if (check_overheat(temps) == ALL_FANS)
 		start_running();
 }
