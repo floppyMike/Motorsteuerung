@@ -7,7 +7,7 @@
 /**
  * @brief Initialize motor PWM timer
  */
-void init_motor_PWM()
+void init_timer1_PWM()
 {
 	//*m_TCCRA = _BV(COM2A0) | _BV(COM2B1) | _BV(WGM21)
 	//| _BV(WGM20);	  // COM0A0 = Toggle OCR0A; COM0B1 = Use OCR0B; WGM## = Set PWM mode
@@ -56,11 +56,3 @@ void turn_PWM(bool on)
 
 #endif // ------------------------------------------------
 
-void handle_motor_PWM_control(unsigned short gas_val)
-{
-	// Disable PWM at 0
-	//turn_PWM(gas_val != 0);
-
-	// Set PWM value
-	set_PWM(gas_val);
-}

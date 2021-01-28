@@ -17,7 +17,8 @@ enum FanType
 	BMS,
 	HOCHSETZER,
 	TREIBER,
-	ALL_FANS
+	ALL_FANS,
+    NO_FANS
 };
 
 /**
@@ -25,6 +26,7 @@ enum FanType
  */
 enum FanState : unsigned char
 {
+    OFF,
 	HALF,
 	FULL,
 	ALL_STATES
@@ -74,7 +76,7 @@ namespace pin
 	static constexpr int ZUND	 = 0;
 	static constexpr int NOT_AUS = 1;
 
-	static constexpr int MUX_SIG1 = A0, MUX_SIG2 = A1;
+	static constexpr int MUX_SIG1 = A1, MUX_SIG2 = A0;
 
 	static constexpr int GAS = A2;
 
