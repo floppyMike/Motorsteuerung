@@ -4,11 +4,6 @@
 #include "Multiplexer.h"
 #include "Defines.h"
 
-// Wenn System an ist ~> schalte Lüfter an.
-// Lüfter werden in 3 Stuffen angeschaltet, Lüfter werden 0%, 75% und 100% getrieben
-// Um ein und aus schalten zu vermeiden wird ein Temperatur Toleranz eingesetzt
-//  ~> Die Toleranz ist der Puffer die der Lüfter an sein muss oder aus sein muss bei der anfänglichen Grenze
-
 /**
  * @brief Check if temperature sensors output a impossible temperature
  * @return fan type of unreadable temperature ~> ALL_FANS means all ok

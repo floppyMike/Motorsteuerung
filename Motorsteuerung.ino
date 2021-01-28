@@ -6,6 +6,8 @@
 #include "Battery.h"
 #include "Motor.h"
 
+#include <avr/sleep.h>
+
 static enum State { RUNNING, COOLING } g_prog_state;
 
 // -----------------------------------------------------------------------------
@@ -36,12 +38,12 @@ void loop()
 
 	// Do checks
 	if (!check_battery(c) || check_temperature(temps) != ALL_FANS)
-    {
+	{
 		kill();
-        return;
-    }
+		return;
+	}
 
-    // Do jobs
+	// Do jobs
 	switch (g_prog_state)
 	{
 	case RUNNING: running(temps, pot); break;
@@ -64,12 +66,12 @@ void start_running()
 
 void running(unsigned int (&temps)[ALL_FANS], unsigned int pot)
 {
-    // Additional checks
+	// Additional checks
 	if (check_overheat(temps) != ALL_FANS)
-    {
+	{
 		cool_down();
-        return;
-    }
+		return;
+	}
 
 	// Tasks
 	handle_motor(pot);
@@ -100,4 +102,15 @@ void cooling(unsigned int (&temps)[ALL_FANS])
 // Kill handler
 // -----------------------------------------------------------------------------
 
-void kill() {}
+void kill() // TODO: Test with live arduino.
+{
+    SerialStream() << "Something went wrong! Going to sleep...";
+
+	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+	cli();
+	sleep_enable();
+	sei();
+	sleep_cpu();
+    sleep_disable();
+    sei();
+}
