@@ -11,7 +11,7 @@
 auto check_temperature(unsigned int (&buf)[ALL_FANS]) -> FanType
 {
 	if (const auto f = find_if(begin(buf), end(buf), [](unsigned int t) { return t <= MIN_TEMP; }); f != end(buf))
-		return (FanType)(begin(buf) - f);
+		return (FanType)(f - begin(buf));
 
 	return ALL_FANS;
 }
@@ -25,7 +25,7 @@ auto check_overheat(unsigned int (&buf)[ALL_FANS]) -> FanType
 	if (const auto f =
 			find_if(begin(buf), end(buf), [c = FAN_STATES[FULL]](unsigned int t) mutable { return t > *c++; });
 		f != end(buf))
-		return (FanType)(begin(buf) - f);
+		return (FanType)(f - begin(buf));
 
 	return ALL_FANS;
 }
