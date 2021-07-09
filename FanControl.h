@@ -22,8 +22,8 @@ auto check_temperature(unsigned int (&buf)[ALL_FANS]) -> FanType
  */
 auto check_overheat(unsigned int (&buf)[ALL_FANS]) -> FanType
 {
-	if (const auto f =
-			find_if(begin(buf), end(buf), [c = FAN_STATES[FULL]](unsigned int t) mutable { return t > *c++; });
+	if (const auto f = find_if(begin(buf), end(buf),
+							   [c = FAN_STATES[FULL]](unsigned int t) mutable { return t > *(c++); }); // <- hehe
 		f != end(buf))
 		return (FanType)(f - begin(buf));
 
@@ -40,7 +40,7 @@ void temperatures(unsigned int (&buf)[ALL_FANS])
 }
 
 /**
- * @brief Temperature change switch pauses
+ * @brief Temperature change switch lag
  */
 static struct FanControl
 {
@@ -49,10 +49,10 @@ static struct FanControl
 } g_fan_states[ALL_FANS];
 
 /**
- * @brief Set the fan object
+ * @brief Change the fan state of a fan
  *
- * @param pin pin of fan
- * @param val analog fan value
+ * @param t fan type
+ * @param s fan state to use
  */
 void set_fan(FanType t, FanState s)
 {
@@ -61,7 +61,7 @@ void set_fan(FanType t, FanState s)
 }
 
 /**
- * @brief set all fans to a power
+ * @brief set all fans to a state
  * @param s Fan state
  */
 void set_fans(FanState s)
@@ -70,12 +70,17 @@ void set_fans(FanState s)
 }
 
 /**
- * @brief Initialize the fans
+ * @brief Initialize the fans by turning them off
  */
-void init_fans() { set_fans(OFF); }
+void init_fans()
+{
+	StatusStream _s("Initializing fans");
+	set_fans(OFF);
+}
 
 /**
- * @brief Handle fan speed using temperature sensors
+ * @brief Switch fan speed if necessary.
+ * @param buf the fan temperatures
  */
 void handle_fan_control(unsigned int (&buf)[ALL_FANS])
 {
@@ -91,14 +96,13 @@ void handle_fan_control(unsigned int (&buf)[ALL_FANS])
 
 				if (temp != fanstate)
 				{
-					SerialStream() << "i: " << f << " was: " << state->was_in << " temp: " << temp
-								   << " fan: " << fanstate;
+					const auto next_state = state->was_in + (fanstate ? 1 : -1);
 
-					state->time = t + SWITCH_LAG;
-					state->was_in += fanstate ? 1 : -1;
+					SerialStream() << "Level switch " << COMP_DESC[f] << ' ' << state->was_in << " -> " << next_state;
+
+					state->time	  = t + SWITCH_LAG;
+					state->was_in = next_state;
 					set_fan((FanType)f, (FanState)state->was_in);
-
-					SerialStream() << "Now: " << state->was_in;
 
 					break;
 				}

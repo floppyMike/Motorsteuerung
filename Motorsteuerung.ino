@@ -1,3 +1,5 @@
+// #define NDEBUG // Uncomment this if release version
+
 #include "DebugStream.h"
 #include "Layout.h"
 #include "PWM.h"
@@ -33,12 +35,19 @@ void loop()
 	unsigned int temps[ALL_FANS];
 	temperatures(temps);
 
-	// Do reporting
-	for (auto i = 0u; i < ALL_FANS; ++i) SerialStream() << COMP_DESC[i] << ": " << temps[i];
+#ifndef NDEBUG
+	print_temps(temps);
+#endif
 
 	// Do checks
-	if (!check_battery(c) || check_temperature(temps) != ALL_FANS)
+	if (bool bat = !check_battery(c), temp = check_temperature(temps) != ALL_FANS; bat || temp)
 	{
+		if (bat)
+			SerialStream() << "Battery needs charging.";
+
+		if (temp)
+			SerialStream() << "Temperature sensor(s) not working correctly.";
+
 		kill();
 		return;
 	}
@@ -50,7 +59,19 @@ void loop()
 	case COOLING: cooling(temps); break;
 	}
 
+#ifndef NDEBUG
 	delay(1000);
+#endif
+}
+
+// -----------------------------------------------------------------------------
+// Common state handlers
+// -----------------------------------------------------------------------------
+
+void print_temps(unsigned int (&temps)[ALL_FANS])
+{
+	SerialStream() << "Temperatures:";
+	for (auto i = 0u; i < ALL_FANS; ++i) Log() << '\t' << COMP_DESC[i] << ": " << temps[i] << '\n';
 }
 
 // -----------------------------------------------------------------------------
@@ -59,7 +80,8 @@ void loop()
 
 void start_running()
 {
-	SerialStream() << "Motor enabled.";
+	StatusStream _s("Enabling motor");
+
 	init_motor();
 	g_prog_state = RUNNING;
 }
@@ -67,8 +89,10 @@ void start_running()
 void running(unsigned int (&temps)[ALL_FANS], unsigned int pot)
 {
 	// Additional checks
-	if (check_overheat(temps) != ALL_FANS)
+	if (auto comp = check_overheat(temps); comp != ALL_FANS)
 	{
+		SerialStream() << COMP_DESC[comp] << " is overheating";
+
 		cool_down();
 		return;
 	}
@@ -84,7 +108,7 @@ void running(unsigned int (&temps)[ALL_FANS], unsigned int pot)
 
 void cool_down()
 {
-	SerialStream() << "Too Hot! Cooling down...";
+	StatusStream _s("Starting cooling procedure");
 
 	set_fans(FULL);
 	set_PWM(0);
@@ -104,13 +128,13 @@ void cooling(unsigned int (&temps)[ALL_FANS])
 
 void kill() // TODO: Test with live arduino.
 {
-    SerialStream() << "Something went wrong! Going to sleep...";
+	StatusStream _s("Shutting down");
 
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	cli();
 	sleep_enable();
 	sei();
 	sleep_cpu();
-    sleep_disable();
-    sei();
+	sleep_disable();
+	sei();
 }

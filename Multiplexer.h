@@ -22,12 +22,12 @@ public:
 	}
 
 	/**
-	 * @brief Change the target pin
+	 * @brief Change the target pin that will be used for getting input from
 	 * @param a Address of the pin (integer is possible)
 	 */
 	auto address(Bit4 a) const -> const Multiplexer &
 	{
-		for (char i = 0, e = sizeof(m_s) / sizeof(m_s[0]); i < e; ++i)
+		for (unsigned int i = 0, e = sizeof(m_s) / sizeof(m_s[0]); i < e; ++i)
 			digitalWrite(m_s[i], a.v & (1 << i) ? HIGH : LOW);
 
 		return *this;
@@ -76,7 +76,9 @@ static Multiplexer mux2(pin::MUX_SIG2, pin::MUX_S0, pin::MUX_S1, pin::MUX_S2, pi
  * @param mux_pin pin to read from BOTH multiplexers
  * @return read value
  */
-auto mux_val(int mux_pin) -> int
+auto mux_val(unsigned int mux_pin) -> int
 {
-	return (mux_pin <= Multiplexer::INPUTS ? &mux1 : &mux2)->address({ mux_pin % (Multiplexer::INPUTS + 1) }).read();
+	return (mux_pin <= Multiplexer::INPUTS ? &mux1 : &mux2)
+		->address({ (unsigned char)(mux_pin % (Multiplexer::INPUTS + 1)) })
+		.read();
 }
