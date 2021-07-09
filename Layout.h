@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DebugStream.h"
 #include "Utility.h"
 
 #define MEGA
@@ -88,6 +89,8 @@ namespace pin
  */
 void init_pins() noexcept
 {
+	StatusStream _s("Setting up pins");
+
 	for (auto l = begin(pin::LUEFTER), e = end(pin::LUEFTER); l != e; ++l) pinMode(*l, OUTPUT);
 
 	pinMode(pin::PWM, OUTPUT);

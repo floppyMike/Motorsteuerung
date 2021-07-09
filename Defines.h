@@ -19,7 +19,7 @@ static constexpr const char *COMP_DESC[ALL_FANS] = {
  * @brief Describes the borders where the fans start switching to another power. The last row of values describe the
  * critical limit
  */
-static constexpr int FAN_STATES[ALL_STATES][ALL_FANS] = {
+static constexpr unsigned int FAN_STATES[ALL_STATES][ALL_FANS] = {
 	{ 50, 50, 50, 50, 50, 50 }, { 147, 147, 147, 147, 147, 147 }, { 200, 200, 200, 200, 200, 200 }
 }; // TODO: Measure appropiate values
 
