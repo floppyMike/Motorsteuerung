@@ -38,7 +38,7 @@ Erstelle eine neue Version. Alle änderungen berühren das alte nicht.
 git checkout -b <Name>
 ```
 
-### Welchsle Version
+### Wechsle Version
 Welchse auf eine älteres oder neueres Version. Alle nicht hinzugefügten Änderungen folgen mit.
 ```
 git branch <name>
@@ -60,3 +60,14 @@ wget https://mailfence.com/pub/docs/santigoro/web/SimulIDE_0.4.14/simulide_0.4.1
 ```
 ./simulide_0.4.14-SR4.AppImage
 ```
+
+## Todo
+1. Teste, ob die simulierten Proceduren auch gleich im Echt funktionieren.
+2. Teste und vervollständige die [PWM](http://www.righto.com/2009/07/secrets-of-arduino-pwm.html) funktion.
+3. Messe Temperatur Werte um zu definieren welche Werte sicher sind und welche nicht.
+4. Entwickle eine Schnittstelle um den Batterie Zustand festzustellen.
+5. Find einen besseren Weg, um festzustellen, ob die Temperatur Sensoren angeschlossen/funktionieren.
+6. Entwickle einen Weg, um festzustellen, ob der Motor richtig läuft.
+7. Vervollständige den Release Version, indem alle Logs nicht gedrückt werden (C Macros!).
+8. (Optional) Gebe die verschiedenen Werte an ein Display aus.
+9. (Optional) Drucke bei Release die Debug logs zur EEPROM (könnte aber EEPROM schnell ausnutzen).
